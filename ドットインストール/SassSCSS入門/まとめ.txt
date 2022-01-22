@@ -1,0 +1,191 @@
+1
+sassとはCSSを効率的に書く記法のこと
+２つの記法がある
+.sass (RUby/Halm)
+.scss (CSS3) 現在の主流
+コマンドラインでのUnixコマンドの基礎が必要
+main.scss
+
+2
+#main {                  CSSの場合は #main p と書く必要があるが
+  width: 90%;            sassは構造的に表現できる
+  p {
+    font-size: 14px;
+  }
+}
+
+sassをcssに変換する・・・sass scss/main.scss:css/main.css
+より分かりやすくする・・・sass --style expanded scss/main.scss:css/main.css
+
+3
+自動で上書きする・・・sass --style expanded --watch scss:css
+
+4
+& は親要素のセレクタを表す
+a {
+    textdecoration:none;
+    &:hover {
+      font-wight:bold;
+    }
+  }
+
+5
+変数とはデータにつけるラベルのこと
+データ型（数値、文字列、真偽、色、リスト）
++ - * / が使える
+
+$number: 10px;
+p {
+  font-size: $number - 2px;
+}
+ 
+6
+$imgDir: "../img/";  文字列は""で囲う
+
+#main {
+  background: url($imgDir + "bg.png");   結果 url("../img/bg.png");
+}
+
+("#{$imgDir}bg.png") と表現できる #{} この中にある式を評価しなさいという意味
+
+7
+$color: red;
+p {
+  font-size: lighten($color, 30%);  明るさを調節できる
+}                                   参考：sass built-in functions
+
+8
+条件分岐
+$debugMode: true;
+
+#main {
+  @if $debugMode == true {
+      color: red;
+  } @else {
+      color: green;
+  }
+}
+
+9
+ループ
+
+@for $i from 10 through 14 {             変数10～14を定義
+    .fs#{$i} { font-size: #{$i}px; }     10～14のクラスと10～14pxの文
+}
+
+$i: 10;   先に変数を定義
+@while $1 <= 14 {
+    .fs#{$i} { font-size: #{$i}px; }
+    $i: $i + 1;  変数を１ずつ増やす
+}
+
+10
+リストとは似たようなデータをまとめて管理できるデータ型のこと
+
+$animals: cat, dog, tiger;
+
+@each $animal in $animals {
+  .#{cat-icon { background: url("cat.png"); }
+}
+↓
+@each $animal in $animals {
+  .#{$animal}-icon { background: url("#{$animal}.png"); }
+}
+
+11.12
+関数
+
+$totalWidth: 940px;
+$columnCount :5;
+
+@function getColumnWidth($width, $count) {    関数:getColumnWidth  全体の横幅$width  列の数$count
+    $padding: 10px;  列の余白
+    $columnWidht: floor(($width - ($padding * ($count - 1))) / $count);  
+    // floorで小数点を切り捨て 全体の幅から列間の幅を引き列の合計で割る
+    @debug $columnWidth;  数値の確認
+    @return $columnWidth;
+}
+
+.grid {
+  float: left;
+  width: getColumnWidth($totalWidth, $columCount);
+}
+
+13
+ファイルを分離する
+Sassで別ファイルで管理する時は、 _ で始まるファイル名にする
+partials と呼ばれる
+@import  で読み込む
+
+// _settings.scss  
+$totalWidth: 940px;
+$columnCount :5;
+
+// _functions.scss
+@function getColumnWidth($width, $count) {    
+    $padding: 10px;  
+    $columnWidht: floor(($width - ($padding * ($count - 1))) / $count);  
+    @debug $columnWidth;  
+    @return $columnWidth;
+}
+
+// main.scss
+@import "settings";
+@import "functions";
+
+.grid {
+  float: left;
+  width: getColumnWidth($totalWidth, $columCount);
+}
+
+14
+@mixin・・・複数の機能をまとめて管理できる機能
+
+@mixin round {
+    border-radius: 4px;
+}
+
+.label {
+    font-size: 12px;
+    @include round;  ←border-radius: 4px;に置き換わる
+}
+______________________________________________________
+@mixinは引数を持つことができる
+
+@mixin round($radius) {       5pxが入り
+    border-radius: $radius;   5pxが当てはまる
+}
+
+.label {
+    font-size: 12px;
+    @include round(5px);  
+}
+______________________________________________________
+
+@mixin round($radius: 4px) {       初期値を設定できる
+    border-radius: $radius;        @include round(10px)の場合上書きされる
+}
+
+.label {
+    font-size: 12px;
+    @include round(10px);  
+}
+______________________________________________________
+15
+@extend （継承）
+.msg {                         .msg, .errorMsg, .warningMsg {
+    font-size: 12px;                font-size: 12px;
+    font-weight:        →          bold;font-weight: bold;
+    padding: 2px 4px;               padding: 2px 4px;
+    color:white;                    color:white;
+}                              }
+
+.errorMsg {                      @mixinだと上記の設定が.errorMsgと               
+    @extend .msg;                .warningMsgに挿入される
+    background: red;
+}
+
+.warningMsg {
+    @extend .msg;
+    background:orange;
+}
