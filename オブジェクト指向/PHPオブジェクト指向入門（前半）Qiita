@@ -1,0 +1,57 @@
+クラスとオブジェクト初級
+
+オブジェクト指向の特徴
+・外部には機能的にまとめられた最低限必要な情報しか公開しない
+・ライブラリ開発や複数人での開発に向いている
+・大規模になってきてもメンテナンスがしやすい
+
+クラス・・・設計図のこと
+プロパティ・・・情報のこと
+public,private・・・アクセス権限
+-> アロー演算子・・・インスタンスのプロパティのこと
+インスタンス・・・クッキーの型にくり抜かれた生地の様なもの
+カプセル化・・・外部かｒなおアクセスを禁止すること
+メソッド・・・クラスに所属する関数のようなもの
+
+class Robot {
+  private $name = '';  プロパティを定義
+  public function setName($name) {  setNameは関数名で$nameの値を設定
+      $this->name = (string)filter_ver($name);   $thisは自分自身のオブジェクトを指す
+}
+
+  public function getName() {
+      return $this->name;
+  }
+}
+
+$a = new Robot;  インスタンスの作成
+$a->setName('ロボ太郎');  メソッドを呼び出す
+$b =new Robot;
+$b->setName('ロボ太郎')
+
+echo $a->getName();
+echo $b->getName();
+
+_______________________________________________________________________________________
+クラスとオブジェクト中級
+
+__construct という名前でコンストラクタメソッドを作ると、インスタンス生成時に自動的にコールされる
+このような特別なメソッドを総称してマジックメソッドという
+
+class Robot {
+    private $name = '';
+    public function __construct($name) {
+        $this->setName($name);
+}
+    public function setName($name) {
+        $this->name = (string)filter_var($name);
+    }
+    public function getName() {
+        return $this->name;
+    }
+}
+
+$a = new Robot('ロボ太郎');
+echo $a->getName();  //ロボ太郎
+
+その他のマジックメソッド:https://www.php.net/manual/ja/language.oop5.magic.php
