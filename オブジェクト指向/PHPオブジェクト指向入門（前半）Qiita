@@ -307,7 +307,7 @@ message: Good morning
 可変関数
 
 
-call_user_func() 関数
+call_user_func() 関数   これは分かるけど書き方が
 クラスやオブジェクトのメソッドをコールバック関数として渡すには、call_user_func()関数を利用すると良い？？
 第１引数には呼び出したいコールバック関数を渡します。通常の関数であれば可変関数と同じく、関数の名称を文字列で渡す
 オブジェクトのメソッドの場合は、配列を用い0番目の要素にオブジェクト自身、
@@ -339,3 +339,29 @@ func(array($obj, "callbackMethod"));      # <= "callback function result :hoge"�
 
 # 静的メソッドのをコールバック関数として渡す。
 func(array("MyClass", "staticCallbackMethod"));  # <= "callback function result :fuga"と出力
+
+無名関数でコールバック
+<?php
+
+#コールバック関数を受け取る関数
+function func($callback)
+{
+    echo "callback function result :" . call_user_func($callback) . PHP_EOL;
+}
+
+# 無名関数をコールバック関数として渡す。
+func(function() { return "bar"; });  # <= "callback function result :bar" と出力
+一行目のfunc($callback)にfunction() { return "bar"; }を入れてるだけ？
+
+
+実行するにはcall_user_func()を利用するか、
+代入された変数に可変関数のように()を付与することでも呼び出すことができる
+<?php
+# 変数に代入した無名関数を呼び出す。     これもコールバックなのか
+$func = function() { return "foo"; };
+echo $func() . PHP_EOL;  # <= "foo"と出力される。
+
+
+継承
+
+オーバーライド
