@@ -361,6 +361,51 @@ func(function() { return "bar"; });  # <= "callback function result :bar" と出
 $func = function() { return "foo"; };
 echo $func() . PHP_EOL;  # <= "foo"と出力される。
 
+call_user_func_array 関数
+配列形式で与えられた可変長引数を渡すことができる
+
+$members= array(
+    array('YJSNPI'),
+    array('MUR'),
+    array('KMR'),
+);
+
+ call_user_func_array 関数を使えば配列を引数として展開してコールすることが出来る
+ 但し今回に限っては array_merge 関数が引数を最低1つ必要とするため、1つ以上あるかどうかのチェックが必要
+
+if ($members) { // (count($members) > 0) とほぼ同じ意味    ←ここで引数が１つ以上あるか確認してると思う
+    $a = call_user_func_array('array_merge', $members);
+} else {
+    $a = array();
+}
+
+コンストラクタがコールできない
+以下のような func_get_args 関数を用いた可変長引数を受け取るコンストラクタがあったときに対応できない
+よく分からないけど、今はとりあえずそうなんだぁと思って復習する
+
+class KarateTeam {
+    private $members;
+    public function __construct() {
+        $this->members = func_get_args();  ←この関数の意味
+    }
+    public function display() {
+        echo implode(', ', $this->members);      implodeとは配列で指定された複数の文字列を連結するための関数','で繋いでる
+    }
+}
+
+悪い例
+$members = array('YJSNPI', 'MUR', 'KMR');
+/* Warning:  call_user_func_array() expects parameter 1 to be a valid callback      *
+ *           non-static method KarateTeam::__construct() cannot be called staticall */
+$team = call_user_func_array('KarateTeam::__construct', $members);
+$team->display();
+
+これに対応するためには、 ReflectionClass::newInstanceArgs メソッドを用いる
+良い例
+$members = array('YJSNPI', 'MUR', 'KMR');
+$reflection = new ReflectionClass('KarateTeam');
+$team = $reflection->newInstanceArgs($members);
+$team->display(); // YJSNPI, MUR, KMR
 
 継承
 
