@@ -8,9 +8,9 @@
 クラス・・・設計図のこと
 プロパティ・・・情報のこと
 public,private・・・アクセス権限
--> アロー演算子・・・インスタンスのプロパティのこと
+-> アロー演算子・・・インスタンスのプロパティにアクセスする
 インスタンス・・・クッキーの型にくり抜かれた生地の様なもの
-カプセル化・・・外部かｒなおアクセスを禁止すること
+カプセル化・・・外部からのアクセスを禁止すること
 メソッド・・・クラスに所属する関数のようなもの
 
 class Robot {
@@ -207,3 +207,135 @@ class Exception {
 }
 
 LogicException クラス
+プログラムの論理的な(Logic)誤りを指摘する例外
+いわば、コードを書いた自分のための警告
+この例外を捕まえる必要は基本的に無く、逆に発生しないようにプログラムを書かなければならない
+
+RuntimeException クラス
+プログラムの実行時における(Runtime)例外
+ユーザー入力・確率といった不確定要素の決定次第で発生してしまう、いわば発生しても仕方ない、発生することを想定して捕まえなければならない例外を表す
+
+InvalidArgumentException
+引数の型が期待する型と一致しなかった場合にスローされる例外
+
+組み込みクラスの例外？？？？？
+要復習
+
+クロージャ   もう少し調べる必要がある
+PHPでは関数をオブジェクトとして生成することが出来る
+これは一般的にクロージャ、無名関数、ラムダなどと呼ばれる
+
+$closure = function ($option) {
+    return "そうだよ（{$option}）";
+};
+echo $closure('便乗');
+
+・$closure = オブジェクト; という代入式の一部なので末尾に ; が必要である。
+・function の後にすぐ引数の列挙が来る。関数名が存在しない
+
+スコープ
+PHPの変数は、使える有効範囲が限られており、この範囲のことをスコープと言う
+{  }で囲まれた関数内で宣言した変数のことをローカル変数、その外で宣言した変数をグローバル変数と言う
+それぞれの変数の効力が及ぶ有効範囲をローカルスコープ、グローバルスコープと呼ぶ
+グローバルスコープはプログラム全体どこでも使うことが出来る
+
+<?php    グローバルスコープ
+function outputInfo($name) {    ローカルスコープ        
+    $pet = “犬”; echo $name . “さんは” . $pet . “を飼っています。<br>”;    ローカルスコープ 
+}    ローカルスコープ 
+outputInfo(“山田”);     グローバルスコープ
+?>
+
+<?php
+function outputInfo($name){
+$pet = “犬”;
+echo $name . “さんは” . $pet . “を飼っています。<br>”;
+}
+outputInfo(“山田”);
+echo $pet . “は可愛いですね。”;   グローバルスコープで変数 $pet を呼び出すとエラーになる
+?>
+
+グローバル宣言をするとローカル変数がグローバルスコープでも使える
+
+<?php
+function outputInfo($name){
+global $pet ;
+$pet = “犬”; echo $name . “さんは” . $pet . “を飼っています。<br>”;
+}
+outputInfo(“山田”);
+echo $pet . “は可愛いですね。”;
+?>
+
+引数以外の変数を利用したい場合は、useを使って渡す
+<?php
+$greeting = "Good morning";
+
+$greet_nouse_use = function()
+{
+    error_log("message: " . $greeting);
+};
+
+
+$greet_use_use = function() use ($greeting)
+{
+    error_log("message: " . $greeting);
+};
+
+実行結果
+message:
+message: Good morning
+
+クロージャの特徴として、引数以外の変数を実行時ではなく、
+自分が定義された時点で解決するという特徴がある
+下のコードでは無名関数$greetが定義された時点の変数$greetingの値はGood morning、
+実行の時点ではHello
+<?php
+$greeting = "Good morning";
+
+$greet = function () use ($greeting) {
+    error_log("message: " . $greeting);
+};
+
+$greeting = 'Hello';
+$greet();
+
+実行結果
+message: Good morning
+
+コールバック  書き方がよくわからない
+関数に引数として渡される関数
+可変関数
+
+
+call_user_func() 関数
+クラスやオブジェクトのメソッドをコールバック関数として渡すには、call_user_func()関数を利用すると良い？？
+第１引数には呼び出したいコールバック関数を渡します。通常の関数であれば可変関数と同じく、関数の名称を文字列で渡す
+オブジェクトのメソッドの場合は、配列を用い0番目の要素にオブジェクト自身、
+1番目の要素に呼び出したいメソッドの名称を文字列で渡す
+呼び出したいメソッドがクラスの静的メソッドの場合、配列の0番目の要素にクラス名を文字列で渡す
+<?php
+# クラスの定義
+class MyClass
+{
+    function callbackMethod()
+    {
+        return "hoge";
+    }
+    static function staticCallbackMethod()
+    {
+        return "fuga";
+    }
+}
+
+#コールバック関数を受け取る関数
+function func($callback)
+{
+    echo "callback function result :" . call_user_func($callback) . PHP_EOL;
+}
+
+#メソッドをコールバック関数として渡す。
+$obj = new MyClass();
+func(array($obj, "callbackMethod"));      # <= "callback function result :hoge"と出力
+
+# 静的メソッドのをコールバック関数として渡す。
+func(array("MyClass", "staticCallbackMethod"));  # <= "callback function result :fuga"と出力
