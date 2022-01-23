@@ -55,3 +55,155 @@ $a = new Robot('ロボ太郎');
 echo $a->getName();  //ロボ太郎
 
 その他のマジックメソッド:https://www.php.net/manual/ja/language.oop5.magic.php
+
+stdClass・・・プロパティなどが何もない標準クラス
+              特に定義をしなくともプロパティに値を入れられる
+              未定義のプロパティにアクセスするとwarning
+
+キャスト・・・ある変数を任意の型で評価（変換）することをキャストという
+              例えば、「文字列」の数値を「整数」や「浮動小数点数」で変換すること
+
+stdClassから配列へ
+$array = (array)$stdClass;
+
+配列からstdClassへ
+$stdClass = (object)$array;
+
+但し、 数字添え字配列 に対して (object) キャストは使用してはいけない
+アクセス不能なプロパティが発生してしまう
+連想配列だけを対象とする
+
+通常の値渡し 
+$a = 'value';
+$b = $a;    $bにはvalueのコピーが渡される。その後$aの値を変えても$bの値は変わらない。
+
+通常のリファレンス渡し
+$a = 'value';
+$b = &$a;   $aの値を変えると$bの値も変更される
+
+オブジェクトのID渡し
+$a = new stdClass;
+$b = $a;  オブジェクトはIDという値で管理されている。
+
+オブジェクトIDのリファレンス渡し
+$a = new stdClass;
+$b = &$a;  実際にリファレンス渡しがされるのは稀
+
+静的プロパティ
+・クラスのオブジェクトを生成せずにアクセスできる
+・「クラス名::プロパティ名」のようにスコープ定義演算子（::）を使ってアクセスできる
+・オブジェクト（インスタンス）に関係なく共通で管理している
+
+<? php
+class = NumPrint {
+  private $num = 0 ;
+  public static $staticNum = 0;
+  public function addNum() {
+      $this->num++;
+      self::$staticNum++;
+  } 
+}
+
+$numprint = new NumPrint();
+$numprint->addNum();
+
+print"プロパティの値".$numprint->num;
+print",staticプロパティの値".NumPrint::$staticNum;
+
+$newprint2 = new NumPrint();
+$newprint2->addNum();
+
+print"</br>プロパティの値".$numprint->num;
+print",staticプロパティの値".NumPrint::$staticNum;
+
+?>
+
+実行結果
+プロパティの値1,staticプロパティの値1
+プロパティの値1,staticプロパティの値2   staticはオブジェクトに関係なく共通で管理されている
+
+静的メソッド
+<?php
+
+class Sample {
+  public static printTest() {
+    print"staticメソッド";
+  }
+}
+
+Sample::printTest();
+
+?>
+
+実行結果
+staticメソッド
+
+Factory Method パターン
+
+$a = new Robot('ロボ太郎', 'red');
+echo $a->getColor(); // red
+$a->__construct('ロボ太郎', 'blue');  コンストラクタにアクセスすると色を書き換えることが出来てしまう
+echo $a->getColor(); // blue
+
+public static function createRedRobot($name) {
+        return new self($name, 'red');  
+        // クラス内にて自らのインスタンスを生成する場合、new クラス名 の代わりに new self が使える
+    }
+
+$a = Robot::createRedRobot('ロボ太郎');  メソッドでnew Robot
+echo $a->getColor(); // red
+$a->__construct('ロボ太郎', 'blue'); // エラー  privateになっている
+echo $a->getColor(); // red
+
+エラー（例外処理）
+
+関数を定義
+function div($a, $b) {
+    if ($a > 0 && $b == 0) {
+        return INF;
+    }
+    if ($a < 0 && $b == 0) {
+        return -INF;
+    }
+    if ($a == 0 && $b == 0) {
+        throw new Exception('ゼロ除算とか無理だってはっきりわかんだね');
+    }
+    return $a / $b;    ←どういう意味？？？？？
+}
+
+実行
+try {
+    echo "計算を始めます\n";
+    printf("div(1, 0) = %s\n", div(1, 0));
+    printf("div(-1, 0) = %s\n", div(-1, 0));
+    printf("div(0, 0) = %s\n", div(0, 0));    ←throwされた場合
+    echo "計算は正常に終了しました\n";        ↓強制的にcatch
+} catch (Exception $e) {                      ←new Exception('ゼロ除算とか無理だってはっきりわかんだね');
+    echo $e->getMessage() . "\n";
+    echo "そんなことはしてはいけない（戒め）\n";
+}
+
+結果
+計算を始めます
+div(1, 0) = INF
+div(-1, 0) = -INF
+ゼロ除算とか無理だってはっきりわかんだね
+そんなことはしてはいけない（戒め）
+
+Exceptionクラスの概要
+class Exception {
+    private $message;
+    private $code;
+    public function __construct($message = '', $code = 0) {
+        $this->message = $message;
+        $this->code    = $code;
+    }
+    public function getMessage() {
+        return $this->message;
+    }
+    public function getCode() {
+        return $this->code;
+    }
+}
+
+LogicException クラス
