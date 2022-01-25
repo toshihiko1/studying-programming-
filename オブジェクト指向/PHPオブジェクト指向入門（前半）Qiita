@@ -408,5 +408,13 @@ $team = $reflection->newInstanceArgs($members);
 $team->display(); // YJSNPI, MUR, KMR
 
 継承
+class B extends A { } 
+BはAの継承クラスであるという定義
+この定義から見てAのことを親と呼ぶことがある
+
+継承したクラスでは
+親クラスのプロパティやメソッドが全て引き継がれる
+引き継いだもののうち public または protected なものに限定して内部からアクセスすることが出来る
+外部からのアクセスは public に限定される
 
 オーバーライド
