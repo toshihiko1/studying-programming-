@@ -1,0 +1,64 @@
+各ディレクトリの役割
+public
+publicディレクトリをWebサイトを公開するときのrootディレクトリに見立てている
+
+src/scss/baseディレクトリ
+SCSS全体に影響があるファイルをこのbaseディレクトリに格納する
+設定ディレクトリの役割も兼ねる
+
+src/scss/base/global-variablesディレクトリ
+SCSS全体で使用するグローバル変数を定義するファイルをこの配下のディレクトリに格納する
+
+src/scss/modulesディレクトリ
+モジュールのSCSSファイルをここに格納する
+モジュールとは、header、footer、buttonなどのひとかたまりの部品のこと
+
+src/scss/layoutsディレクトリ
+レイアウトのSCSSファイルをここに格納する
+レイアウトのクラスとは、簡単に言うとページの外枠として使用するクラスのこと
+
+各ファイルの役割とポイント
+public/html/module-list.html
+モジュールの一覧を作成するためのHTMLファイル
+作成したモジュールを一覧化しておくことで、どのようなモジュールがあるのか把握しやすくなる
+
+src/scss/base/_default.scss
+要素が初期値として持っているスタイルをhtml5reset-1.6.1.cssでリセットして、ブラウザごとの差異を無くし、
+さらにプロジェクトごとの初期値を設定しておくために、この_default.scssで少し設定を追加する
+この初期設定のファイルに多くの設定を書きすぎて失敗しているプロジェクトが多くあるようだ
+あくまでも最低限のルールを記述することが、この_default.scssを作成するうえでの非常に重要なポイント
+
+aタグとbuttonタグについて
+
+a {                                         これはボタンモジュール以外のaタグの設定
+  color: #0000E9;                           ボタンモジュールには :link :visited :active のスタイルを適用しないため、
+  &:not([class^="mod-button"]) {            ボタンモジュールのクラスをnotで除外している
+    &:link {                                これらの設定は除外しておかないと詳細度が少し高い分、
+    }                                       ボタンクラス作成時に邪魔になる
+    &:visited {                             [class^="mod-button"] のように、文字列の部分一致を利用している
+      // color: #420278;                    属性セレクタについて学ぶ必要がある
+    }
+    &:hover {                               :hoverに関してもテキストリンクとボタンでは全く違うスタイルを適用したい
+      opacity: 0.7;                         という意図から、notで除外
+    }
+    &:active {
+      // color: #FB0007;
+    }
+  }
+}
+
+a,
+button,
+input[type="submit"] {
+  &:focus {                                             :focus については、tabキーでブラウザを操作する人がどこの要素に
+    box-shadow: 0 0 0 2px rgba(7, 71, 192, 0.5);        フォーカスしているのかわかりやすいように、ボタンモジュールを除
+    outline: none;                                      外せず、aタグ、buttonタグ、input[type=”submit”]にスタイルが適 
+  }                                                     用されるようにしている
+}
+
+src/scss/base/global-variables/media-queries/_media-queries.scss
+media queryのブレークポイントの変数を定義するファイル
+このチュートリアルではBootstrap5と同じ数値で設定している
+Window幅の狭いデバイスを基準としてスタイルを書いていく場合はmin-widthでブレークポイントを設定することになる
+
+BEMによるクラス命名規則を学ぶ
