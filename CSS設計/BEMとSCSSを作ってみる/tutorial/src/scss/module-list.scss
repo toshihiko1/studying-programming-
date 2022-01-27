@@ -1,3 +1,6 @@
 // base
-@import "./base/global-variables/media-queries/_media-queries.scss";
+@import "./base/global-variables/media-queries/_media-queries.scss"; 
 @import "./base/_default.scss";
+
+// modules
+@import "./modules/*";

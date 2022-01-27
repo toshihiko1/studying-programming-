@@ -1,34 +1,34 @@
-各ディレクトリの役割
+●各ディレクトリの役割
 public
 publicディレクトリをWebサイトを公開するときのrootディレクトリに見立てている
 
-src/scss/baseディレクトリ
+★src/scss/baseディレクトリ
 SCSS全体に影響があるファイルをこのbaseディレクトリに格納する
 設定ディレクトリの役割も兼ねる
 
-src/scss/base/global-variablesディレクトリ
+★src/scss/base/global-variablesディレクトリ
 SCSS全体で使用するグローバル変数を定義するファイルをこの配下のディレクトリに格納する
 
-src/scss/modulesディレクトリ
+★src/scss/modulesディレクトリ
 モジュールのSCSSファイルをここに格納する
 モジュールとは、header、footer、buttonなどのひとかたまりの部品のこと
 
-src/scss/layoutsディレクトリ
+★src/scss/layoutsディレクトリ
 レイアウトのSCSSファイルをここに格納する
 レイアウトのクラスとは、簡単に言うとページの外枠として使用するクラスのこと
 
-各ファイルの役割とポイント
+●各ファイルの役割とポイント
 public/html/module-list.html
 モジュールの一覧を作成するためのHTMLファイル
 作成したモジュールを一覧化しておくことで、どのようなモジュールがあるのか把握しやすくなる
 
-src/scss/base/_default.scss
+★src/scss/base/_default.scss
 要素が初期値として持っているスタイルをhtml5reset-1.6.1.cssでリセットして、ブラウザごとの差異を無くし、
 さらにプロジェクトごとの初期値を設定しておくために、この_default.scssで少し設定を追加する
 この初期設定のファイルに多くの設定を書きすぎて失敗しているプロジェクトが多くあるようだ
 あくまでも最低限のルールを記述することが、この_default.scssを作成するうえでの非常に重要なポイント
 
-aタグとbuttonタグについて
+★aタグとbuttonタグについて
 
 a {                                         これはボタンモジュール以外のaタグの設定
   color: #0000E9;                           ボタンモジュールには :link :visited :active のスタイルを適用しないため、
@@ -56,9 +56,51 @@ input[type="submit"] {
   }                                                     用されるようにしている
 }
 
-src/scss/base/global-variables/media-queries/_media-queries.scss
+★src/scss/base/global-variables/media-queries/_media-queries.scss
 media queryのブレークポイントの変数を定義するファイル
 このチュートリアルではBootstrap5と同じ数値で設定している
 Window幅の狭いデバイスを基準としてスタイルを書いていく場合はmin-widthでブレークポイントを設定することになる
 
-BEMによるクラス命名規則を学ぶ
+●BEMによるクラス命名規則を学ぶ
+
+@import "./modules/*"; のようにディレクトリ内の全てのファイルを表す *を使用
+
+★Block
+まずBlock名(= モジュール名)を決める
+Block名とは、ひとかたまりのモジュール単位を表す名前で、例えばheader、footer、buttonなどが代表的なBlock名として挙げられる
+今回はそれら全てのモジュールに mod- という接頭辞をつけることにする
+今回は例として mod-example-0001 という数字を含んだBlock名利用する
+Block名が複数の単語で構成される場合はハイフンで繋ぐ
+
+モジュールを管理しやすいように、1Blockにつき1ファイルを作成する
+ファイル名の命名規則は _Block名.scss 今回だと_mob-example-0001.scss
+
+Blockクラスは先ほど決めたBlock名がそのままクラス名になる .mod-example-0001
+
+★Element
+Elementクラスとは、Blockを構成する子孫要素クラスのこと
+Elementクラスの命名規則は Block名__Element名 のように、Block名とElement名の間を
+アンダースコア2つで繋ぐルールになっている
+
+.mod-example-0001の下に
+.mod-example-0001__first-element を追記する
+このクラス名は、mod-example-0001に属するfirst-elementという要素であることを表す
+Element名も複数の単語で構成される場合はハイフンで繋ぐ
+
+Blockは複数の子孫要素を包括することができる
+2つめのElementクラスを追記する
+
+★BlockのModifier
+BlockのModifierクラスとは、Blockクラスと一緒に付与することによって、
+Blockクラスとその子孫要素のプロパティの一部を変化をさせるためのクラス
+BlockのModifierクラスの命名規則は Block名--Modifier名 のように、
+Block名とModifier名の間をハイフン2つで繋ぐルールになっている
+
+&.mod-example-0001--danger
+Modifierクラスを定義するとき、親セレクタ参照の & を忘れないように注意する
+今回は1つの単語だが、Modifier名も複数の単語で構成される場合はハイフンで繋ぐ
+
+今回はModifierクラス単体では効果がないようにSCSSを記述することにしており、
+mod-example-0001 と mod-example-0001--danger を一緒に付与したときだけ背景色が赤くなるようにしている
+
+★ElementのModifier
