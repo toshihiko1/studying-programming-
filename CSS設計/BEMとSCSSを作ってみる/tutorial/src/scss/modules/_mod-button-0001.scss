@@ -1,0 +1,126 @@
+.mod-button-0001 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  border-style: solid;
+  padding-left: 20px;
+  padding-right: 20px;
+  width: 100%;
+  text-align: center;
+  text-decoration: none;
+  box-sizing: border-box;
+  border-radius: 4px;
+  cursor: pointer;
+  // ボタンの高さに関わるプロパティ
+  border-width: 2px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  line-height: 24px;
+  font-size: 16px;
+  // ボタンの色に関わるプロパティ（focus, hoverも含む）
+  border-color: #ef940b;
+  background-color: #ef940b;
+  color: #ffffff;
+  &:focus,
+  &:hover {
+    border-color: lighten(#ef940b, 8%);
+    background-color: lighten(#ef940b, 8%);
+  }
+  &[disabled],
+  &.mod-button-0001--disabled {
+    // !importantは原則として使用禁止ですが、他のModifierクラスと一緒に付与したときでもdisabledの状態は最も優先されるべきなので使用しています。
+    border-color: #eeeeee !important;
+    background-color: #eeeeee !important;
+    color: #bbbbbb !important;
+    cursor: default !important;
+    &:focus {
+      box-shadow: none !important;
+    }
+  }
+  &.mod-button-0001--inline-block {
+    display: inline-block;
+    width: auto;
+  }
+  &.mod-button-0001--secondary {
+    border-color: #db0f28;
+    background-color: #db0f28;
+    color: #ffffff;
+    &:focus,
+    &:hover {
+      border-color: lighten(#db0f28, 8%);
+      background-color: lighten(#db0f28, 8%);
+    }
+  }
+  &.mod-button-0001--neutral {
+    border-color: #888888;
+    background-color: #888888;
+    color: #ffffff;
+    &:focus,
+    &:hover {
+      border-color: lighten(#888888, 8%);
+      background-color: lighten(#888888, 8%);
+    }
+  }
+  &.mod-button-0001--transparent {
+    border-color: transparent;
+    background-color: transparent;
+    color: #0000E9;
+    &:focus,
+    &:hover {
+      opacity: 0.7;
+      background-color: #eeeeee;
+    }
+  }
+  &.mod-button-0001--size-xl {
+    padding-top: 16px;
+    padding-bottom: 16px;
+    line-height: 36px;
+    font-size: 24px;
+  }
+  &.mod-button-0001--size-lg {
+    padding-top: 11px;
+    padding-bottom: 11px;
+    line-height: 30px;
+    font-size: 20px;
+  }
+  &.mod-button-0001--size-sm {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    line-height: 20px;
+    font-size: 13px;
+  }
+  &.mod-button-0001--size-xs {
+    padding-top: 0;
+    padding-bottom: 0;
+    line-height: 16px;
+    font-size: 10px;
+  }
+  &.mod-button-0001--icon-justification {
+    display: block;
+    padding-left: 2.6em;
+    padding-right: 2.6em;
+    .mod-button-0001__before-icon-wrapper {
+      display: flex;
+      align-items: center;
+      position: absolute;
+      top: 0;
+      height: 100%;
+      left: 0.8em;
+    }
+    .mod-button-0001__after-icon-wrapper {
+      display: flex;
+      align-items: center;
+      position: absolute;
+      top: 0;
+      height: 100%;
+      right: 0.8em;
+    }
+  }
+  .mod-button-0001__before-icon-wrapper {
+    margin-right: 0.4em;
+  }
+  .mod-button-0001__after-icon-wrapper {
+    margin-left: 0.4em;
+  }
+}

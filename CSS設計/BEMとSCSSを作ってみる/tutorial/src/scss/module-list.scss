@@ -1,6 +1,13 @@
 // base
-@import "./base/global-variables/media-queries/_media-queries.scss"; 
+@import "./base/global-variables/media-queries/_media-queries.scss";
 @import "./base/_default.scss";
 
 // modules
-@import "./modules/*";
+@import "./modules/_mod-example-0001.scss";
+@import "./modules/_mod-footer-0001.scss";
+@import "./modules/_mod-heading-0001.scss";
+@import "./modules/_mod-button-0001.scss";
+@import "./modules/_mod-header-0001.scss";
+@import "./modules/_mod-media-0001.scss";
+@import "./modules/_mod-media-0002.scss";
+@import "./modules/_mod-container-0001.scss";

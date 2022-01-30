@@ -2,3 +2,13 @@
 デザインが切り替わる画面幅のポイントをブレイクポイントという
 
 Bootstrap5
+
+{
+"liveSassCompile.settings.formats": [
+	{
+		"format": "expanded",
+		"extensionName": ".css",
+		"savePath": "/stylesheets"
+	}
+]
+}
